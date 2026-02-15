@@ -137,9 +137,71 @@
 <script>
     let selectedModelName = "";
 
+    // Functie pentru selectarea vizuala
     function selectModel(element, name, img) {
-        document.querySelectorAll('.option-card').forEach(el => el.
+        // 1. Stergem selectia de pe toate
+        let cards = document.querySelectorAll('.option-card');
+        for (let i = 0; i < cards.length; i++) {
+            cards[i].classList.remove('selected');
+        }
+        
+        // 2. Punem selectia pe cel apasat
+        element.classList.add('selected');
+        
+        // 3. Salvam numele
+        selectedModelName = name;
+        
+        // 4. (Optional) Putem afisa o alerta mica sa stim ca merge
+        console.log("Ai ales: " + name);
+    }
 
+    // Functie pentru butonul Mai Departe
+    function nextStep(stepNumber) {
+        // Verificam daca mergem la pasul 2 dar nu am ales modelul
+        if(stepNumber === 2) {
+            if (selectedModelName === "") {
+                alert("⚠️ Te rog dă click pe o poză înainte să mergi mai departe!");
+                return;
+            }
+        }
+
+        // Ascundem toti pasii
+        let steps = document.querySelectorAll('.step');
+        for (let i = 0; i < steps.length; i++) {
+            steps[i].classList.remove('active');
+        }
+
+        // Aratam pasul urmator
+        let nextStepDiv = document.getElementById('step' + stepNumber);
+        if (nextStepDiv) {
+            nextStepDiv.classList.add('active');
+        } else {
+            alert("Eroare: Pasul " + stepNumber + " nu exista!");
+        }
+    }
+
+    // Functie Rezultat Final
+    function showResult() {
+        let color = document.getElementById('colorSelect').value;
+        let scent = document.getElementById('scentSelect').value;
+
+        document.getElementById('resModel').innerText = selectedModelName;
+        document.getElementById('resColor').innerText = color;
+        document.getElementById('resScent').innerText = scent;
+
+        // --- NUMARUL TAU DE TELEFON AICI ---
+        let myPhoneNumber = ""; 
+        
+        let message = "Buna! Vreau modelul: " + selectedModelName + ", Culoare: " + color + ", Aroma: " + scent;
+        let waUrl = "https://wa.me/" + myPhoneNumber + "?text=" + encodeURIComponent(message);
+        
+        document.getElementById('waLink').href = waUrl;
+        
+        // Mergem la pasul 4
+        nextStep(4);
+    }
+</script>
 </html>
+
 
 
