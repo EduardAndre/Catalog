@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurator Comandă</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdf2f8; color: #4a4a4a; padding: 20px; text-align: center; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { color: #db2777; }
+        .step { display: none; } /* Ascundem pașii inițial */
+        .step.active { display: block; animation: fadeIn 0.5s; } /* Arătăm doar pasul activ */
+        
+        /* Stiluri pentru imagini selectabile */
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .option-card { border: 2px solid #eee; border-radius: 10px; cursor: pointer; padding: 10px; transition: 0.2s; }
+        .option-card:hover { transform: translateY(-3px); }
+        .option-card.selected { border-color: #db2777; background-color: #fce7f3; }
+        .option-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; }
+        
+        /* Butoane */
+        .btn { background-color: #db2777; color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1.1em; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background-color: #be185d; }
+        .btn-back { background-color: #9ca3af; margin-right: 10px; }
+        
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1em; margin-top: 10px; }
+
+        .summary { background-color: #f3f4f6; padding: 15px; border-radius: 10px; text-align: left; margin: 20px 0; }
+        .whatsapp-btn { background-color: #25D366; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; display: inline-block; font-weight: bold; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌸 Creează-ți Comanda</h1>
+
+    <div id="step1" class="step active">
+        <h3>Pasul 1: Alege Modelul Preferat</h3>
+        <div class="options-grid">
+            <div class="option-card" onclick="selectModel(this, 'Fluturele Delicat', 'poza1.jpg')">
+                <img src="poza1.jpg" alt="Fluture">
+                <p>Fluturele Delicat</p>
+            </div>
+            <div class="option-card" onclick="selectModel(this, 'Buchet Margarete', 'poza2.jpg')">
+                <img src="poza2.jpg" alt="Margarete">
+                <p>Buchet Margarete</p>
+            </div>
+            <div class="option-card" onclick="selectModel(this, 'Mix Veselie', '1000034112.jpg')">
+                <img src="1000034112.jpg" alt="Mix">
+                <p>Mix Veselie</p>
+            </div>
+            <div class="option-card" onclick="selectModel(this, 'Cutie Luxury', '1000034110.jpg')">
+                <img src="1000034110.jpg" alt="Cutie">
+                <p>Cutie Luxury</p>
+            </div>
+        </div>
+        <button class="btn" onclick="nextStep(2)">Mai Departe ➡️</button>
+    </div>
+
+    <div id="step2" class="step">
+        <h3>Pasul 2: Alege Culoarea</h3>
+        <p>Ce nuanță ți-ar plăcea?</p>
+        <select id="colorSelect">
+            <option value="Roz Pudrat">Roz Pudrat</option>
+            <option value="Albastru Senin">Albastru Senin</option>
+            <option value="Lila Lavandă">Lila Lavandă</option>
+            <option value="Galben Solar">Galben Solar</option>
+            <option value="Alb Perlat">Alb Perlat</option>
+            <option value="Mix Culori">Surprinde-mă (Mix)</option>
+        </select>
+        <br><br>
+        <button class="btn btn-back" onclick="nextStep(1)">⬅️ Înapoi</button>
+        <button class="btn" onclick="nextStep(3)">Mai Departe ➡️</button>
+    </div>
+
+    <div id="step3" class="step">
+        <h3>Pasul 3: Alege Aroma</h3>
+        <p>Cum vrei să miroasă?</p>
+        <select id="scentSelect">
+            <option value="Flori de Cireș">Flori de Cireș (Floral)</option>
+            <option value="Lavandă">Lavandă (Relaxant)</option>
+            <option value="Vată de Zahăr">Vată de Zahăr (Dulce)</option>
+            <option value="Ocean Breeze">Ocean Breeze (Fresh)</option>
+            <option value="Trandafir">Trandafir (Elegant)</option>
+            <option value="Fără Parfum">Fără Parfum</option>
+        </select>
+        <br><br>
+        <button class="btn btn-back" onclick="nextStep(2)">⬅️ Înapoi</button>
+        <button class="btn" onclick="showResult()">Vezi Rezultatul ✅</button>
+    </div>
+
+    <div id="step4" class="step">
+        <h2>🎉 Comanda Ta este Gata!</h2>
+        <div class="summary">
+            <p><strong>Model:</strong> <span id="resModel">...</span></p>
+            <p><strong>Culoare:</strong> <span id="resColor">...</span></p>
+            <p><strong>Aromă:</strong> <span id="resScent">...</span></p>
+        </div>
+        
+        <p>Îți place cum sună? Trimite-mi comanda pe WhatsApp!</p>
+        
+        <a id="waLink" href="#" target="_blank" class="whatsapp-btn">
+            📲 Trimite Comanda pe WhatsApp
+        </a>
+        
+        <br><br>
+        <button class="btn btn-back" onclick="location.reload()">🔄 O iau de la capăt</button>
+    </div>
+
+</div>
+
+<script>
+    let selectedModelName = "";
+
+    // Functie pentru selectarea vizuala a modelului (pozei)
+    function selectModel(element, name, img) {
+        // Scoate selectia de pe celelalte
+        document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
+        // Pune selectia pe cel apasat
+        element.classList.add('selected');
+        selectedModelName = name;
+    }
+
+    // Functie pentru navigarea intre pasi
+    function nextStep(stepNumber) {
+        // Verificam daca la pasul 1 a ales ceva
+        if(stepNumber === 2 && selectedModelName === "") {
+            alert("Te rog alege un model mai întâi! (Dă click pe poză)");
+            return;
+        }
+
+        // Ascunde toti pasii
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        // Arata pasul curent
+        document.getElementById('step' + stepNumber).classList.add('active');
+    }
+
+    // Functie pentru afisarea rezultatului final
+    function showResult() {
+        let color = document.getElementById('colorSelect').value;
+        let scent = document.getElementById('scentSelect').value;
+
+        // Punem textul in pagina
+        document.getElementById('resModel').innerText = selectedModelName;
+        document.getElementById('resColor').innerText = color;
+        document.getElementById('resScent').innerText = scent;
+
+        // Construim link-ul de WhatsApp
+        // Inlocuieste numarul de mai jos cu numarul tau (ex: 40722....)
+        let myPhoneNumber = ""; 
+        
+        let message = `Buna! As vrea sa comand modelul: ${selectedModelName}, Culoare: ${color}, Aroma: ${scent}`;
+        let waUrl = `https://wa.me/${myPhoneNumber}?text=${encodeURIComponent(message)}`;
+        
+        document.getElementById('waLink').href = waUrl;
+
+        // Afisam ultimul pas
+        nextStep(4);
+    }
+</script>
+
+</body>
+</html>
